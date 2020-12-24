@@ -1,12 +1,19 @@
 package com.example.flightstatsm2
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.fragment_flight_detail.*
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -40,7 +47,7 @@ class FlightDetailFragment : Fragment() {
     ): View? {
 
         viewModel = ViewModelProvider(requireActivity()).get(FlightListViewModel::class.java)
-        viewModel.getSelectedFlightNameLiveData().observe(this, androidx.lifecycle.Observer{
+        viewModel.getSelectedFlightNameLiveData().observe(this, androidx.lifecycle.Observer {
             flight_name.text = it
         })
 
@@ -66,3 +73,4 @@ class FlightDetailFragment : Fragment() {
             }
     }
 }
+

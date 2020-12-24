@@ -27,9 +27,6 @@ class SearchFlightsAsyncTask(requestListener: RequestsManager.RequestListener) :
         val result: String? =
             RequestsManager.get(baseUrl, getRequestParams(searchModel = searchModel[0]))
 
-
-
-
         return result
     }
 
