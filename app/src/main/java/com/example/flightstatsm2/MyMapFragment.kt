@@ -15,7 +15,7 @@ class MyMapFragment : SupportMapFragment(), OnMapReadyCallback {
 
         // Set default position
         // Add a marker in Sydney and move the camera
-        val vietnam = LatLng(14.0583, 108.2772) // 14.0583° N, 108.2772° E
+        val vietnam = LatLng(14.0583, 108.2772)
         googleMap!!.addMarker(MarkerOptions().position(vietnam).title("Marker in Vietnam"))
         googleMap!!.moveCamera(CameraUpdateFactory.newLatLng(vietnam))
         googleMap!!.setOnMapClickListener { latLng ->

@@ -127,6 +127,15 @@ class Utils private constructor() {
             return jsonElement.asJsonArray
         }
 
+        fun getFlightTrackFromArray(flightTrackJson: JsonArray): FlightTrackModel{
+            val flightJsonArray = convertStringToJsonArray(arrayAsString)
+            FlightTrackModel flightModelTrack
+            for(flightJson in flightJsonArray){
+                flightModelList.add(Gson().fromJson(flightJson.asJsonObject, FlightModel::class.java))
+            }
+            return flightModelList
+        }
+
         fun _makeJsonAirportLight() {
             var input: InputStream? = null
 
