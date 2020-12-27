@@ -30,7 +30,7 @@ class FlightDetailFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
-    private lateinit var viewModel: FlightListViewModel
+    private lateinit var viewModel: FlightTrackViewModel
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,8 +46,8 @@ class FlightDetailFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        viewModel = ViewModelProvider(requireActivity()).get(FlightListViewModel::class.java)
-        viewModel.getSelectedFlightNameLiveData().observe(this, androidx.lifecycle.Observer {
+        viewModel = ViewModelProvider(requireActivity()).get(FlightTrackViewModel::class.java)
+        viewModel.getSelectedFlightTrackLiveData().observe(this, androidx.lifecycle.Observer {
             flight_name.text = it
         })
 

@@ -16,12 +16,12 @@ import kotlinx.coroutines.withContext
 class FlightTrackViewModel : ViewModel(), RequestsManager.RequestListener {
 
 
-    val flightListLiveData: MutableLiveData<FlightTrackModel> = MutableLiveData()
+    val flightTrackListLiveData: MutableLiveData<List<FlightTrackModel>> = MutableLiveData()
     val isLoadingLiveData: MutableLiveData<Boolean> = MutableLiveData()
-    private val selectedFlightNameLiveData: MutableLiveData<String> = MutableLiveData()
+    private val selectedFlightTrackLiveData: MutableLiveData<String> = MutableLiveData()
 
-    fun getSelectedFlightNameLiveData(): LiveData<String> {
-        return selectedFlightNameLiveData
+    fun getSelectedFlightTrackLiveData(): LiveData<String> {
+        return selectedFlightTrackLiveData
     }
 
 
@@ -31,7 +31,7 @@ class FlightTrackViewModel : ViewModel(), RequestsManager.RequestListener {
             icao,
             time
         )
-        val baseUrl: String = "https://opensky-network.org/api/tracks/all"
+        /*val baseUrl: String = "https://opensky-network.org/api/tracks/all"
 
         viewModelScope.launch {
             //start loading
@@ -50,8 +50,8 @@ class FlightTrackViewModel : ViewModel(), RequestsManager.RequestListener {
                 flightListLiveData.value = flightList
             }
 
-        }
-        // SearchFlightsAsyncTask(this).execute(searchDataModel)
+        }*/
+        SearchFlightTrackAsyncTask(this).execute(searchDataModel)
     }
 
     private fun getRequestParams(searchModel: SearchFlightTrackDataModel?): Map<String, String>? {
@@ -63,16 +63,18 @@ class FlightTrackViewModel : ViewModel(), RequestsManager.RequestListener {
         return params
     }
 
-
     override fun onRequestSuccess(result: String?) {
-        TODO("Not yet implemented")
+        val flightList = Utils.getFlightTrackFromArray(result!!)
+        Log.d("models list", flightList.toString())
+        flightTrackListLiveData.value = flightList
     }
 
     override fun onRequestFailed() {
-        TODO("Not yet implemented")
+        isLoadingLiveData.value = false
+        Log.e("Request", "problem")
     }
 
-    fun updateSelectedFlightName(flightName: String) {
-        selectedFlightNameLiveData.value = flightName
+    fun updateSelectedFlightTrack(flightTrack: String) {
+        selectedFlightTrackLiveData.value = flightTrack
     }
 }

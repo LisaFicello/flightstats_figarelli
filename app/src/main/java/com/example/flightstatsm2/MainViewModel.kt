@@ -46,6 +46,4 @@ class MainViewModel : ViewModel(){
         endDateLiveData.value=calendar
     }
 
-
-
 }

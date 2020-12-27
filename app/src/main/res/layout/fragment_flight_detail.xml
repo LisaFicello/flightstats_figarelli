@@ -28,7 +28,7 @@
 
         <fragment
             android:id="@+id/fragment2"
-            android:name="com.example.flightstatsm2.MyMapFragment"
+            android:name="com.example.flightstatsm2.FlightDetailFragment"
             android:layout_width="406dp"
             android:layout_height="574dp"
             app:layout_constraintBottom_toBottomOf="@+id/flight_name" />

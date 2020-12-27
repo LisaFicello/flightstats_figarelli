@@ -127,13 +127,13 @@ class Utils private constructor() {
             return jsonElement.asJsonArray
         }
 
-        fun getFlightTrackFromArray(flightTrackJson: JsonArray): FlightTrackModel{
-            val flightJsonArray = convertStringToJsonArray(arrayAsString)
-            FlightTrackModel flightModelTrack
-            for(flightJson in flightJsonArray){
-                flightModelList.add(Gson().fromJson(flightJson.asJsonObject, FlightModel::class.java))
+        fun getFlightTrackFromArray(arrayAsString: String): List<FlightTrackModel>{
+            val flightTrackJsonArray = convertStringToJsonArray(arrayAsString)
+            val flightTrackModelList = ArrayList<FlightTrackModel>()
+            for(flightJson in flightTrackJsonArray){
+                flightTrackModelList.add(Gson().fromJson(flightJson.asJsonObject, FlightTrackModel::class.java))
             }
-            return flightModelList
+            return flightTrackModelList
         }
 
         fun _makeJsonAirportLight() {
@@ -224,6 +224,4 @@ class Utils private constructor() {
             }
         }
     }
-
-
 }
