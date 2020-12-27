@@ -47,7 +47,7 @@ class FlightListActivity : AppCompatActivity() {
 
                 transaction.commit()
 
-                flight_cell.setOnClickListener { viewDetailsFlight(icao, time) }
+                //flight_cell.setOnClickListener { viewDetailsFlight(icao, time) }
 
             } else {
                 transaction.add(R.id.detail_container, newFragment)
