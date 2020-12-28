@@ -30,13 +30,6 @@ class FlightListActivity : AppCompatActivity() {
             intent.getLongExtra("end", 0)
         )
 
-        val icao = intent.getStringExtra("icao")!!
-        val begin = intent.getLongExtra("begin", 0)
-        val end = intent.getLongExtra("end", 0)
-        val time = end - begin
-
-        val flight_cell = findViewById<View>(R.id.info_flight)
-
         viewModel.getSelectedFlightNameLiveData().observe(this, androidx.lifecycle.Observer {
             //switch fragment
             val newFragment: FlightDetailFragment = FlightDetailFragment.newInstance()
@@ -47,8 +40,6 @@ class FlightListActivity : AppCompatActivity() {
 
                 transaction.commit()
 
-                //flight_cell.setOnClickListener { viewDetailsFlight(icao, time) }
-
             } else {
                 transaction.add(R.id.detail_container, newFragment)
                 transaction.addToBackStack(null)
@@ -56,12 +47,5 @@ class FlightListActivity : AppCompatActivity() {
                 transaction.commit()
             }
         })
-    }
-
-   private fun viewDetailsFlight(icao : String, time : Long) {
-        val i = Intent(this, FlightTrackActivity::class.java)
-        i.putExtra("icao", icao)
-        i.putExtra("time", time)
-        startActivity(i)
     }
 }

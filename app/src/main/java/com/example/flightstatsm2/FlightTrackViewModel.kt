@@ -4,10 +4,6 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 /**
  * Created by sergio on 19/11/2020
@@ -16,7 +12,7 @@ import kotlinx.coroutines.withContext
 class FlightTrackViewModel : ViewModel(), RequestsManager.RequestListener {
 
 
-    val flightTrackListLiveData: MutableLiveData<List<FlightTrackModel>> = MutableLiveData()
+    val flightTrackListLiveData: MutableLiveData<List<FlightInfosModel>> = MutableLiveData()
     val isLoadingLiveData: MutableLiveData<Boolean> = MutableLiveData()
     private val selectedFlightTrackLiveData: MutableLiveData<String> = MutableLiveData()
 

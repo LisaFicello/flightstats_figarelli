@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -15,48 +16,22 @@ import kotlinx.coroutines.withContext
  */
 class FlightListViewModel : ViewModel(), RequestsManager.RequestListener {
 
-
     val flightListLiveData: MutableLiveData<List<FlightModel>> = MutableLiveData()
     val isLoadingLiveData: MutableLiveData<Boolean> = MutableLiveData()
     private val selectedFlightNameLiveData: MutableLiveData<String> = MutableLiveData()
+    private val selectedFlightLiveData: MutableLiveData<FlightModel> = MutableLiveData()
 
     fun getSelectedFlightNameLiveData(): LiveData<String> {
         return selectedFlightNameLiveData
     }
 
-
     fun search(icao: String, isArrival: Boolean, begin: Long, end: Long) {
-
         val searchDataModel = SearchDataModel(
             isArrival,
             icao,
             begin,
             end
         )
-        /*val baseUrl: String = if (isArrival) {
-            "https://opensky-network.org/api/flights/arrival"
-        } else {
-            "https://opensky-network.org/api/flights/departure"
-        }
-
-        viewModelScope.launch {
-            //start loading
-            isLoadingLiveData.value = true
-            val result = withContext(Dispatchers.IO) {
-                RequestsManager.getSuspended(baseUrl, getRequestParams(searchDataModel))
-            }
-            //end loading
-            isLoadingLiveData.value = false
-            if (result == null) {
-                Log.e("Request", "problem")
-
-            } else {
-                val flightList = Utils.getFlightListFromString(result)
-                Log.d("models list", flightList.toString())
-                flightListLiveData.value = flightList
-            }
-
-        }*/
         SearchFlightsAsyncTask(this).execute(searchDataModel)
     }
 
@@ -81,7 +56,6 @@ class FlightListViewModel : ViewModel(), RequestsManager.RequestListener {
         isLoadingLiveData.value = false
         Log.e("Request", "problem")
     }
-
     fun updateSelectedFlightName(flightName: String) {
         selectedFlightNameLiveData.value = flightName
     }

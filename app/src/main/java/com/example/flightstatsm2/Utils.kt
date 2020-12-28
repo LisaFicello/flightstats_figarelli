@@ -2,7 +2,6 @@ package com.example.flightstatsm2
 
 import android.content.Context
 import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import com.google.gson.JsonArray
@@ -13,7 +12,6 @@ import java.io.*
 import java.nio.charset.Charset
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.logging.Handler
 import kotlin.collections.ArrayList
 
 
@@ -53,7 +51,6 @@ class Utils private constructor() {
             val jsonElement = parser.parse(getTextFromStream(input))
             return jsonElement.asJsonArray
         }
-
 
         fun getText(filename: String): String? {
             val f = File(getRootDirectory(), filename)
@@ -125,15 +122,6 @@ class Utils private constructor() {
         private fun convertStringToJsonArray(arrayAsString: String): JsonArray{
             val jsonElement = JsonParser.parseString(arrayAsString)
             return jsonElement.asJsonArray
-        }
-
-        fun getFlightTrackFromArray(arrayAsString: String): List<FlightTrackModel>{
-            val flightTrackJsonArray = convertStringToJsonArray(arrayAsString)
-            val flightTrackModelList = ArrayList<FlightTrackModel>()
-            for(flightJson in flightTrackJsonArray){
-                flightTrackModelList.add(Gson().fromJson(flightJson.asJsonObject, FlightTrackModel::class.java))
-            }
-            return flightTrackModelList
         }
 
         fun _makeJsonAirportLight() {

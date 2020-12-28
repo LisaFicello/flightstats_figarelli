@@ -1,18 +1,20 @@
 package com.example.flightstatsm2
 
+
+import android.location.Location
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
-import kotlinx.android.synthetic.main.fragment_flight_detail.*
+import com.google.android.gms.maps.model.*
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -25,13 +27,16 @@ private const val ARG_PARAM2 = "param2"
  * Use the [FlightDetailFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class FlightDetailFragment : Fragment() {
+class FlightDetailFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapLoadedCallback {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
 
     private lateinit var viewModel: FlightListViewModel
+    private lateinit var mMapView: MapView
+    private lateinit var myGoogleMap: GoogleMap
 
+    private lateinit var coordinates: LiveData<CoordinatesModel>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,26 +50,30 @@ class FlightDetailFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        val rootView: View = inflater.inflate(R.layout.fragment_flight_detail, container, false)
 
         viewModel = ViewModelProvider(requireActivity()).get(FlightListViewModel::class.java)
-        viewModel.getSelectedFlightNameLiveData().observe(this, androidx.lifecycle.Observer {
+        viewModel.getSelectedFlightNameLiveData().observe(this, {
             flight_name.text = it
         })
 
+        //Récupération des coordonées des aéroports de départ et d'arrivée
+        val airportDep = selectedFlightLiveData.value!!.estDepartureAirport
+        val airportArr = selectedFlightLiveData.value!!.estArrivalAirport
+
+
+        mMapView = rootView.findViewById(R.id.mapView) as MapView
+        mMapView.onCreate(savedInstanceState)
+        mMapView.onResume()
+
+        mMapView.getMapAsync(this)
 
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_flight_detail, container, false)
+        return rootView
+        //return inflater.inflate(R.layout.fragment_flight_detail_map, container, false)
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment FlightDetailFragment.
-         */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance() =
@@ -72,5 +81,53 @@ class FlightDetailFragment : Fragment() {
 
             }
     }
-}
 
+    override fun onMapReady(googleMap: GoogleMap) {
+        myGoogleMap = googleMap
+        myGoogleMap.setOnMapLoadedCallback(this)
+        // Add a marker in Sydney and move the camera
+        //val departureAirportLocation = LatLng()
+        //val arrivalAirportLocation = LatLng()
+        Log.e("Mapfragment", "Dep airport" + coordinates.departureLatLong)
+        Log.e("Mapfragment", "Arrival airport" + coordinates.arrivalLatLong)
+
+
+        myGoogleMap.addMarker(
+            MarkerOptions()
+                .position(coordinates.departureLatLong)
+                .title("Departure airport")
+        )
+
+        myGoogleMap.addMarker(
+            MarkerOptions()
+                .position(coordinates.arrivalLatLong)
+                .title("Arrival airport")
+        )
+
+
+        val poi = ArrayList<LatLng>()
+        val polyLineOptions = PolylineOptions()
+        poi.add(coordinates.departureLatLong) //from
+        poi.add(coordinates.arrivalLatLong) // to
+        polyLineOptions.width(7f)
+        polyLineOptions.geodesic(true)
+        //polyLineOptions.color(resources.getColor())
+        polyLineOptions.addAll(poi)
+        val polyline: Polyline = myGoogleMap.addPolyline(polyLineOptions)
+        polyline.isGeodesic = true
+
+    }
+
+    override fun onMapLoaded() {
+        this.zoomToFit(coordinates.departureLatLong, coordinates.arrivalLatLong)
+    }
+
+    private fun zoomToFit(poi1: LatLng, poi2: LatLng) {
+        val group = LatLngBounds.Builder()
+            .include(poi1) // LatLgn object1
+            .include(poi2) // LatLgn object2
+            .build()
+
+        myGoogleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(group, 400))
+    }
+}

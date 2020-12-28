@@ -6,33 +6,20 @@
     android:layout_height="match_parent"
     tools:context=".FlightDetailFragment"
     android:background="#FFFFFF">
-
-    <!-- TODO: Update blank fragment layout -->
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <TextView
-            android:id="@+id/flight_name"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/hello_blank_fragment"
-            tools:layout_editor_absoluteX="0dp" />
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/mapView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:id="@+id/btn_details"
+            android:id="@+id/button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="More details"
-            app:layout_constraintBottom_toTopOf="@+id/fragment2" />
-
-        <fragment
-            android:id="@+id/fragment2"
-            android:name="com.example.flightstatsm2.MyMapFragment"
-            android:layout_width="406dp"
-            android:layout_height="574dp"
-            app:layout_constraintBottom_toBottomOf="@+id/flight_name" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
+            android:text="More info on this flight"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 </FrameLayout>
