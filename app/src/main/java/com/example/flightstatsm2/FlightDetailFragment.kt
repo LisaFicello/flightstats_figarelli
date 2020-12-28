@@ -1,6 +1,7 @@
 package com.example.flightstatsm2
 
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -139,5 +140,7 @@ class FlightDetailFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapLoad
 
     fun getMoreDetails() {
         Log.e("Mapfragment", "J'AI CLIQUE SUR LE BOUTON")
+        val intent = Intent(getActivity(), PlaneInfoActivity::class.java)
+        startActivity(intent)
     }
 }

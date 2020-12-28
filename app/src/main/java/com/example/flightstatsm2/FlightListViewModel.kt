@@ -64,16 +64,6 @@ class FlightListViewModel : ViewModel(), RequestsManager.RequestListener {
         SearchFlightsAsyncTask(this).execute(searchDataModel)
     }
 
-    private fun getRequestParams(searchModel: SearchDataModel?): Map<String, String>? {
-        val params = HashMap<String, String>()
-        if (searchModel != null) {
-            params["airport"] = searchModel.icao
-            params["begin"] = searchModel.begin.toString()
-            params["end"] = searchModel.end.toString()
-        }
-        return params
-    }
-
     override fun onRequestSuccess(result: String?) {
         isLoadingLiveData.value = false
         val flightList = Utils.getFlightListFromString(result!!)
