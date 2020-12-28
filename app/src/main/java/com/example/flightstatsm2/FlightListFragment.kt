@@ -63,8 +63,6 @@ class FlightListFragment : Fragment(), FlightListRecyclerAdapter.OnItemClickList
             }
         })
 
-
-
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_flight_list, container, false)
     }
