@@ -25,7 +25,7 @@ private const val ARG_PARAM2 = "param2"
  * Use the [FlightDetailMapFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class FlightDetailFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapLoadedCallback {
+class FlightDetailMapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapLoadedCallback {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -49,7 +49,7 @@ class FlightDetailFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapLoad
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val rootView: View = inflater.inflate(R.layout.fragment_flight_detail, container, false)
+       val rootView: View = inflater.inflate(R.layout.fragment_flight_detail, container, false)
 
         viewModel = ViewModelProvider(requireActivity()).get(FlightListViewModel::class.java)
         viewModel.getSelectedFlightNameLiveData().observe(this, {
@@ -74,7 +74,7 @@ class FlightDetailFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapLoad
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance() =
-            FlightDetailFragment().apply {
+            FlightDetailMapFragment().apply {
 
             }
     }
@@ -100,6 +100,7 @@ class FlightDetailFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapLoad
                 .position(arrCoordinates)
                 .title("Arrival airport")
         )
+
 
         val poi = ArrayList<LatLng>()
         val polyLineOptions = PolylineOptions()

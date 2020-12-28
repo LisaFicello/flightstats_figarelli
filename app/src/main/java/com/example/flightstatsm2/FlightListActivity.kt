@@ -1,15 +1,10 @@
 package com.example.flightstatsm2
 
-import android.content.DialogInterface
-import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.activity_flight_list.*
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.flight_cell.*
 
 
 class FlightListActivity : AppCompatActivity() {
@@ -30,22 +25,23 @@ class FlightListActivity : AppCompatActivity() {
             intent.getLongExtra("end", 0)
         )
 
-        viewModel.getSelectedFlightNameLiveData().observe(this, androidx.lifecycle.Observer {
+        viewModel.getSelectedFlightNameLiveData().observe(this, {
             //switch fragment
-            val newFragment: FlightDetailFragment = FlightDetailFragment.newInstance()
+            val newFragment: FlightDetailMapFragment = FlightDetailMapFragment.newInstance()
             val transaction: FragmentTransaction = supportFragmentManager.beginTransaction()
             if (isMobile) {
                 transaction.add(R.id.activityContainer, newFragment)
                 transaction.addToBackStack(null)
 
                 transaction.commit()
-
-            } else {
+            }
+            else{
                 transaction.add(R.id.detail_container, newFragment)
                 transaction.addToBackStack(null)
 
                 transaction.commit()
             }
         })
+
     }
 }
