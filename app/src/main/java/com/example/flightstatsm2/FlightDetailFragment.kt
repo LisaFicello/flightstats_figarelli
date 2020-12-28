@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -13,6 +14,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.*
+import kotlinx.android.synthetic.main.fragment_flight_detail.*
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -25,7 +27,8 @@ private const val ARG_PARAM2 = "param2"
  * Use the [FlightDetailMapFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class FlightDetailMapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapLoadedCallback {
+class FlightDetailFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapLoadedCallback{
+
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -45,11 +48,8 @@ class FlightDetailMapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapL
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-       val rootView: View = inflater.inflate(R.layout.fragment_flight_detail, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val rootView: View = inflater.inflate(R.layout.fragment_flight_detail, container, false)
 
         viewModel = ViewModelProvider(requireActivity()).get(FlightListViewModel::class.java)
         viewModel.getSelectedFlightNameLiveData().observe(this, {
@@ -65,16 +65,25 @@ class FlightDetailMapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapL
 
         mMapView.getMapAsync(this)
 
+
+
         // Inflate the layout for this fragment
         return rootView
         //return inflater.inflate(R.layout.fragment_flight_detail_map, container, false)
+    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        btnDetails.setOnClickListener{
+            getMoreDetails()
+        }
     }
 
     companion object {
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance() =
-            FlightDetailMapFragment().apply {
+            FlightDetailFragment().apply {
 
             }
     }
@@ -126,5 +135,9 @@ class FlightDetailMapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapL
             .build()
 
         myGoogleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(group, 400))
+    }
+
+    fun getMoreDetails() {
+        Log.e("Mapfragment", "J'AI CLIQUE SUR LE BOUTON")
     }
 }

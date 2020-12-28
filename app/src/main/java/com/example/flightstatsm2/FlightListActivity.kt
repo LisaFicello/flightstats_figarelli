@@ -15,6 +15,7 @@ class FlightListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_flight_list)
 
+
         val isMobile = detail_container == null
 
         viewModel = ViewModelProvider(this).get(FlightListViewModel::class.java)
@@ -27,7 +28,7 @@ class FlightListActivity : AppCompatActivity() {
 
         viewModel.getSelectedFlightNameLiveData().observe(this, {
             //switch fragment
-            val newFragment: FlightDetailMapFragment = FlightDetailMapFragment.newInstance()
+            val newFragment: FlightDetailFragment = FlightDetailFragment.newInstance()
             val transaction: FragmentTransaction = supportFragmentManager.beginTransaction()
             if (isMobile) {
                 transaction.add(R.id.activityContainer, newFragment)
@@ -42,6 +43,7 @@ class FlightListActivity : AppCompatActivity() {
                 transaction.commit()
             }
         })
+
 
     }
 }
