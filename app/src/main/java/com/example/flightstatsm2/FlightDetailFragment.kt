@@ -1,14 +1,12 @@
 package com.example.flightstatsm2
 
 
-import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -24,7 +22,7 @@ private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
- * Use the [FlightDetailFragment.newInstance] factory method to
+ * Use the [FlightDetailMapFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
 class FlightDetailFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapLoadedCallback {
@@ -36,7 +34,8 @@ class FlightDetailFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapLoad
     private lateinit var mMapView: MapView
     private lateinit var myGoogleMap: GoogleMap
 
-    private lateinit var coordinates: LiveData<CoordinatesModel>
+    private lateinit var depCoordinates: LatLng
+    private lateinit var arrCoordinates: LatLng
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,13 +53,11 @@ class FlightDetailFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapLoad
 
         viewModel = ViewModelProvider(requireActivity()).get(FlightListViewModel::class.java)
         viewModel.getSelectedFlightNameLiveData().observe(this, {
-            flight_name.text = it
+            //flight_name.text = it
         })
 
-        //Récupération des coordonées des aéroports de départ et d'arrivée
-        val airportDep = selectedFlightLiveData.value!!.estDepartureAirport
-        val airportArr = selectedFlightLiveData.value!!.estArrivalAirport
-
+        depCoordinates = viewModel.getDepartureAirportCoordinates()
+        arrCoordinates = viewModel.getArrivalAirportCoordinates()
 
         mMapView = rootView.findViewById(R.id.mapView) as MapView
         mMapView.onCreate(savedInstanceState)
@@ -88,27 +85,26 @@ class FlightDetailFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapLoad
         // Add a marker in Sydney and move the camera
         //val departureAirportLocation = LatLng()
         //val arrivalAirportLocation = LatLng()
-        Log.e("Mapfragment", "Dep airport" + coordinates.departureLatLong)
-        Log.e("Mapfragment", "Arrival airport" + coordinates.arrivalLatLong)
+        Log.e("Mapfragment", "Dep airport" + viewModel.getDepartureAirportCoordinates())
+        Log.e("Mapfragment", "Arrival airport" + viewModel.getArrivalAirportCoordinates())
 
 
         myGoogleMap.addMarker(
             MarkerOptions()
-                .position(coordinates.departureLatLong)
+                .position(depCoordinates)
                 .title("Departure airport")
         )
 
         myGoogleMap.addMarker(
             MarkerOptions()
-                .position(coordinates.arrivalLatLong)
+                .position(arrCoordinates)
                 .title("Arrival airport")
         )
 
-
         val poi = ArrayList<LatLng>()
         val polyLineOptions = PolylineOptions()
-        poi.add(coordinates.departureLatLong) //from
-        poi.add(coordinates.arrivalLatLong) // to
+        poi.add(depCoordinates) //from
+        poi.add(arrCoordinates) // to
         polyLineOptions.width(7f)
         polyLineOptions.geodesic(true)
         //polyLineOptions.color(resources.getColor())
@@ -119,7 +115,7 @@ class FlightDetailFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapLoad
     }
 
     override fun onMapLoaded() {
-        this.zoomToFit(coordinates.departureLatLong, coordinates.arrivalLatLong)
+        this.zoomToFit(depCoordinates, arrCoordinates)
     }
 
     private fun zoomToFit(poi1: LatLng, poi2: LatLng) {

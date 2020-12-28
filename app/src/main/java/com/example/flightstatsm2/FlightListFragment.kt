@@ -42,20 +42,17 @@ class FlightListFragment : Fragment(), FlightListRecyclerAdapter.OnItemClickList
         savedInstanceState: Bundle?
     ): View? {
         viewModel = ViewModelProvider(requireActivity()).get(FlightListViewModel::class.java)
-        viewModel.flightListLiveData.observe(this, androidx.lifecycle.Observer{
-            if (it == null || it.isEmpty()) {
-                //DISPLAY ERROR
-            } else {
-                val adapter = FlightListRecyclerAdapter()
-                adapter.flightList = it
-                adapter.onItemClickListener = this
-                recyclerView.adapter = adapter
-                recyclerView.layoutManager =
-                    LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-            }
+        viewModel.flightListLiveData.observe(this, {
+            val adapter = FlightListRecyclerAdapter()
+            adapter.flightList = it
+            adapter.onItemClickListener = this
+            recyclerView.adapter = adapter
+            recyclerView.layoutManager =
+                LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+
         })
 
-        viewModel.isLoadingLiveData.observe(this, androidx.lifecycle.Observer{
+        viewModel.isLoadingLiveData.observe(this, {
             if (it) {
                 progressBar.visibility = View.VISIBLE
             } else {
@@ -63,16 +60,14 @@ class FlightListFragment : Fragment(), FlightListRecyclerAdapter.OnItemClickList
             }
         })
 
-
-
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_flight_list, container, false)
     }
 
-    override fun onItemClicked(flightName: String) {
+    override fun onItemClicked(flight: FlightModel) {
         //DO SOMETHING WHEN CLICKING ON THE FLIGHT NAME
-        Log.d("ViewClicked", flightName)
-        viewModel.updateSelectedFlightName(flightName)
+        Log.d("ViewClicked", flight.callsign)
+        viewModel.updateSelectedFlight(flight)
     }
 
     companion object {
