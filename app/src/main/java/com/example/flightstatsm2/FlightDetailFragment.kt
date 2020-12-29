@@ -69,7 +69,6 @@ class FlightDetailFragment : Fragment() {
         @JvmStatic
         fun newInstance() =
             FlightDetailFragment().apply {
-
             }
     }
 }
