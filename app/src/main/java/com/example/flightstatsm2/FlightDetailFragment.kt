@@ -1,6 +1,7 @@
 package com.example.flightstatsm2
 
 
+import android.R.attr.button
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -8,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -80,12 +80,19 @@ class FlightDetailFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapLoad
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        btnDetails.setOnClickListener{
+        /*btnDetails.setOnClickListener{
             Log.e("FlightDetailFragment", "Encore une victoire de canard")
             //onDestroy()
+            //val intent = Intent(getActivity(), PlaneInfoActivity::class.java)
             val intent = Intent(getActivity(), PlaneInfoActivity::class.java)
+            Log.e("FlightDetailFragment", "Enfin peut être")
             startActivity(intent)
-        }
+            Log.e("FlightDetailFragment", "WE ARE THE CHAMPIONS MY FRIEND")
+        }*/
+        btnDetails.setOnClickListener { activity?.let{
+            val intent = Intent (it, PlaneInfoActivity::class.java)
+            it.startActivity(intent)
+        } }
     }
 
     override fun onDestroy() {

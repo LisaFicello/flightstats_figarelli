@@ -3,25 +3,45 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/activityPlaneContainer">
+
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/mapViewCurrentPlane"
+        android:layout_width="413dp"
+        android:layout_height="319dp"
+        tools:layout_editor_absoluteX="-2dp"
+        tools:layout_editor_absoluteY="94dp" />
 
     <fragment
-        android:id="@+id/fragmentPlaneInfo"
+        android:id="@+id/fragment"
         android:name="com.example.flightstatsm2.PlaneInfoFragment"
-        android:layout_width="411dp"
-        android:layout_height="373dp"
-        android:layout_marginTop="4dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_width="413dp"
+        android:layout_height="317dp"
+        tools:layout_editor_absoluteX="-2dp"
+        tools:layout_editor_absoluteY="412dp" />
 
-    <fragment
-        android:id="@+id/fragmentPlaneHistory"
-        android:name="com.example.flightstatsm2.PlaneHistoryFragment"
-        android:layout_width="412dp"
-        android:layout_height="347dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        tools:layout_editor_absoluteX="0dp"
-        tools:ignore="MissingConstraints" />
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="14dp" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="33dp" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="52dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
