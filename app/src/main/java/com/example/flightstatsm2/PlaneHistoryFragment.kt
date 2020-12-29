@@ -28,7 +28,7 @@ private const val ARG_PARAM2 = "param2"
  * Use the [FlightDetailMapFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class FlightDetailFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapLoadedCallback{
+class PlaneHistoryFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapLoadedCallback{
 
     // TODO: Rename and change types of parameters
     private var param1: String? = null
@@ -76,7 +76,7 @@ class FlightDetailFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapLoad
         super.onViewCreated(view, savedInstanceState)
 
         btnDetails.setOnClickListener{
-            Log.e("FlightDetailFragment", "Encore une victoire de canard")
+            Log.e("PlaneHistory", "Encore une victoire de canard")
             val intent = Intent(getActivity(), PlaneInfoActivity::class.java)
             startActivity(intent)
         }
