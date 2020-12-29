@@ -1,7 +1,6 @@
 package com.example.flightstatsm2
 
 
-import android.R.attr.button
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -29,18 +28,20 @@ private const val ARG_PARAM2 = "param2"
  * Use the [FlightDetailMapFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class FlightDetailFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapLoadedCallback{
+class FlightDetailFragment : Fragment(), OnMapReadyCallback, RequestsManager.RequestListener, GoogleMap.OnMapLoadedCallback{
 
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    private var searchIcao: String? = null
+    private var searchTime: Long? = null
 
     private lateinit var viewModel: FlightListViewModel
     private lateinit var mMapView: MapView
     private lateinit var myGoogleMap: GoogleMap
 
-    private lateinit var depCoordinates: LatLng
-    private lateinit var arrCoordinates: LatLng
+    private lateinit var coordinates: CoordinatesModel
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,19 +52,20 @@ class FlightDetailFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapLoad
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
+        inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val rootView: View = inflater.inflate(R.layout.fragment_flight_detail, container, false)
 
         viewModel = ViewModelProvider(requireActivity()).get(FlightListViewModel::class.java)
-        viewModel.getSelectedFlightNameLiveData().observe(this, {
-            //flight_name.text = it
+        viewModel.getSelectedFlightNameLiveData().observe(this, androidx.lifecycle.Observer {
+            flight_name.text = it
         })
 
-        depCoordinates = viewModel.getDepartureAirportCoordinates()
-        arrCoordinates = viewModel.getArrivalAirportCoordinates()
+        val rootView = inflater.inflate(R.layout.fragment_flight_detail, container, false)
+
+        viewModel = ViewModelProvider(requireActivity()).get(FlightListViewModel::class.java)
+        searchIcao = viewModel.getSelectedIcao()
+        searchTime = viewModel.getSelectedTime()
 
         mMapView = rootView.findViewById(R.id.mapView) as MapView
         mMapView.onCreate(savedInstanceState)
@@ -71,33 +73,64 @@ class FlightDetailFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapLoad
 
         mMapView.getMapAsync(this)
 
-
-
-        // Inflate the layout for this fragment
         return rootView
-        //return inflater.inflate(R.layout.fragment_flight_detail_map, container, false)
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        /*btnDetails.setOnClickListener{
-            Log.e("FlightDetailFragment", "Encore une victoire de canard")
-            //onDestroy()
-            //val intent = Intent(getActivity(), PlaneInfoActivity::class.java)
-            val intent = Intent(getActivity(), PlaneInfoActivity::class.java)
-            Log.e("FlightDetailFragment", "Enfin peut être")
-            startActivity(intent)
-            Log.e("FlightDetailFragment", "WE ARE THE CHAMPIONS MY FRIEND")
-        }*/
-        btnDetails.setOnClickListener { activity?.let{
-            val intent = Intent (it, PlaneInfoActivity::class.java)
-            it.startActivity(intent)
-        } }
+        btnDetails.setOnClickListener {
+            val intent = Intent(
+                activity,
+                PlaneInfoViewModel::class.java
+            )
+            startActivity(intent) }
     }
 
-    override fun onDestroy() {
-        super.onDestroy();
-        getFragmentManager()!!.beginTransaction().remove(fragmentFlightList).commit();
+    override fun onRequestSuccess(result: String?) {
+        val flightTrackModel: FlightTrackModel = Utils.getTrackFromString(result!!)
+        coordinates = CoordinatesModel(
+            LatLng(
+                flightTrackModel.path[0].lat.toDouble(),
+                flightTrackModel.path[0].long.toDouble()
+            ),
+            LatLng(
+                flightTrackModel.path.last().lat.toDouble(),
+                flightTrackModel.path.last().long.toDouble()
+            )
+        )
+        updateMap(coordinates)
+        Log.i("coordinates", "L'appel API a réussi fréro")
+    }
+
+    override fun onRequestFailed() {
+        Log.e("Request", "problem")
+    }
+
+    fun searchTrack(icao: String, time: Long) {
+        val searchFlightTrackDataModel = SearchFlightTrackDataModel(icao, time)
+        SearchFlightTrackAsyncTask(this).execute(searchFlightTrackDataModel)
+
+        Log.i("AppelDone", "L'appel API a été lancé fréro")
+    }
+
+    fun updateMap(coordinates: CoordinatesModel){
+        myGoogleMap.addMarker(
+            MarkerOptions().position(coordinates.departureLatLong)
+        )
+        myGoogleMap.addMarker(
+            MarkerOptions().position(coordinates.arrivalLatLong)
+        )
+        Log.i(
+            "Coordinates",
+            coordinates.departureLatLong.toString() + " - " + coordinates.arrivalLatLong.toString()
+        )
+
+        val poi = ArrayList<LatLng>()
+        poi.add(coordinates.departureLatLong) //from
+        poi.add(coordinates.arrivalLatLong) // to
+        val polyline: Polyline = myGoogleMap.addPolyline(PolylineOptions().addAll(poi))
+        this.zoomToFit(coordinates.departureLatLong, coordinates.arrivalLatLong)
+
     }
 
     companion object {
@@ -112,49 +145,19 @@ class FlightDetailFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapLoad
     override fun onMapReady(googleMap: GoogleMap) {
         myGoogleMap = googleMap
         myGoogleMap.setOnMapLoadedCallback(this)
-        // Add a marker in Sydney and move the camera
-        //val departureAirportLocation = LatLng()
-        //val arrivalAirportLocation = LatLng()
-        Log.e("Mapfragment", "Dep airport" + viewModel.getDepartureAirportCoordinates())
-        Log.e("Mapfragment", "Arrival airport" + viewModel.getArrivalAirportCoordinates())
-
-
-        myGoogleMap.addMarker(
-            MarkerOptions()
-                .position(depCoordinates)
-                .title("Departure airport")
-        )
-
-        myGoogleMap.addMarker(
-            MarkerOptions()
-                .position(arrCoordinates)
-                .title("Arrival airport")
-        )
-
-
-        val poi = ArrayList<LatLng>()
-        val polyLineOptions = PolylineOptions()
-        poi.add(depCoordinates) //from
-        poi.add(arrCoordinates) // to
-        polyLineOptions.width(7f)
-        polyLineOptions.geodesic(true)
-        //polyLineOptions.color(resources.getColor())
-        polyLineOptions.addAll(poi)
-        val polyline: Polyline = myGoogleMap.addPolyline(polyLineOptions)
-        polyline.isGeodesic = true
-
+        searchTrack(searchIcao!!, searchTime!!)
+        Log.i("MapIsREADYYYYYYYYY", "La map est prête fréro")
     }
 
     override fun onMapLoaded() {
-        this.zoomToFit(depCoordinates, arrCoordinates)
+        Log.i("MapIsLOADEDDDDDD", "La map a chargé fréro")
     }
-
-    private fun zoomToFit(poi1: LatLng, poi2: LatLng) {
-        val group = LatLngBounds.Builder()
-            .include(poi1) // LatLgn object1
-            .include(poi2) // LatLgn object2
+    private fun zoomToFit(departure: LatLng, arrival: LatLng) {
+        val coordinates = LatLngBounds.Builder()
+            .include(departure)
+            .include(arrival)
             .build()
 
-        myGoogleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(group, 400))
+        myGoogleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(coordinates, 400))
     }
 }

@@ -42,17 +42,20 @@ class FlightListFragment : Fragment(), FlightListRecyclerAdapter.OnItemClickList
         savedInstanceState: Bundle?
     ): View? {
         viewModel = ViewModelProvider(requireActivity()).get(FlightListViewModel::class.java)
-        viewModel.flightListLiveData.observe(this, {
-            val adapter = FlightListRecyclerAdapter()
-            adapter.flightList = it
-            adapter.onItemClickListener = this
-            recyclerView.adapter = adapter
-            recyclerView.layoutManager =
-                LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-
+        viewModel.flightListLiveData.observe(this, androidx.lifecycle.Observer{
+            if (it == null || it.isEmpty()) {
+                //DISPLAY ERROR
+            } else {
+                val adapter = FlightListRecyclerAdapter()
+                adapter.flightList = it
+                adapter.onItemClickListener = this
+                recyclerView.adapter = adapter
+                recyclerView.layoutManager =
+                    LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+            }
         })
 
-        viewModel.isLoadingLiveData.observe(this, {
+        viewModel.isLoadingLiveData.observe(this, androidx.lifecycle.Observer{
             if (it) {
                 progressBar.visibility = View.VISIBLE
             } else {
@@ -64,10 +67,12 @@ class FlightListFragment : Fragment(), FlightListRecyclerAdapter.OnItemClickList
         return inflater.inflate(R.layout.fragment_flight_list, container, false)
     }
 
-    override fun onItemClicked(flight: FlightModel) {
+    override fun onItemClicked(flightName: String, icao: String, time: Long) {
         //DO SOMETHING WHEN CLICKING ON THE FLIGHT NAME
-        Log.d("ViewClicked", flight.callsign)
-        viewModel.updateSelectedFlight(flight)
+        Log.d("ViewClicked", flightName)
+        viewModel.updateSelectedFlightName(flightName)
+        viewModel.updateSelectedIcao(icao)
+        viewModel.updateSelectedTime(time)
     }
 
     companion object {

@@ -10,6 +10,7 @@ import com.google.gson.JsonArray
 import com.google.gson.JsonParser
 import org.apache.commons.io.IOUtils
 import org.json.JSONArray
+import org.json.JSONObject
 import java.io.*
 import java.nio.charset.Charset
 import java.text.SimpleDateFormat
@@ -123,10 +124,37 @@ class Utils private constructor() {
             return flightModelList
         }
 
+        fun getTrackFromString(objectAsString: String): FlightTrackModel{
+            val trackJsonObject = JSONObject(objectAsString)
+            val waypointFromObject: JSONArray = trackJsonObject.getJSONArray("path")
+            val waypointList = ArrayList<WaypointModel>()
+            for(i in 0 until waypointFromObject.length()){
+                val waypointJsonArray: JSONArray = waypointFromObject.getJSONArray(i)
+                val waypointModel = WaypointModel(
+                    waypointJsonArray.getInt(0),
+                    waypointJsonArray.getDouble(1),
+                    waypointJsonArray.getDouble(2),
+                    waypointJsonArray.getLong(3),
+                    waypointJsonArray.getLong(4),
+                    waypointJsonArray.getBoolean(5)
+                )
+                waypointList.add(waypointModel)
+            }
+            val trackModel = FlightTrackModel(
+                trackJsonObject.getString("icao24"),
+                trackJsonObject.getString("callsign"),
+                trackJsonObject.getInt("startTime"),
+                trackJsonObject.getInt("endTime"),
+                waypointList
+            )
+            return trackModel
+        }
+
         private fun convertStringToJsonArray(arrayAsString: String): JsonArray{
             val jsonElement = JsonParser.parseString(arrayAsString)
             return jsonElement.asJsonArray
         }
+
 
         fun _makeJsonAirportLight() {
             var input: InputStream? = null
@@ -215,12 +243,5 @@ class Utils private constructor() {
                 } else duration.append(minute).append("min").toString()
             }
         }
-
-        fun midPoint(coo1: LatLng, coo2: LatLng): LatLng {
-            return LatLng((coo1.latitude + coo2.latitude) / 2, (coo1.longitude + coo2.longitude) / 2)
-        }
     }
-
-
-
 }

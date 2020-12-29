@@ -16,51 +16,25 @@ import kotlinx.coroutines.withContext
  */
 class FlightListViewModel : ViewModel(), RequestsManager.RequestListener {
 
-    private val airportListLiveData : MutableLiveData<List<Airport>> = MutableLiveData()
     val flightListLiveData: MutableLiveData<List<FlightModel>> = MutableLiveData()
     val isLoadingLiveData: MutableLiveData<Boolean> = MutableLiveData()
-    private val selectedFlightLiveData: MutableLiveData<FlightModel> = MutableLiveData()
+    private val selectedFlightNameLiveData: MutableLiveData<String> = MutableLiveData() //A CHANGER
+    private val selectedIcaoLiveData: MutableLiveData<String> = MutableLiveData() //A CHANGER
+    private val selectedTimeLiveData: MutableLiveData<Long> = MutableLiveData() //A CHANGER
 
-    init {
-        airportListLiveData.value = Utils.generateAirportList()
+    fun getSelectedFlightNameLiveData(): LiveData<String> {
+        return selectedFlightNameLiveData
+    }
+    fun getSelectedIcao(): String {
+        return selectedIcaoLiveData.value!!
+    }
+    fun getSelectedTime(): Long {
+        return selectedTimeLiveData.value!!
     }
 
-    fun getSelectedFlightNameLiveData(): LiveData<FlightModel> {
-        return selectedFlightLiveData
-    }
+    fun searchFlight(icao: String, isArrival: Boolean, begin: Long, end: Long) {
 
-    fun getDepartureAirportCoordinates(): LatLng {
-        var coordinates = LatLng(0.0, 0.0)
-        val dep = selectedFlightLiveData.value!!.estDepartureAirport
-        airportListLiveData.value!!.forEach {
-            if (it.icao == dep) {
-                coordinates = LatLng(it.lat.toDouble(), it.lon.toDouble())
-                return coordinates
-            }
-        }
-        return coordinates
-    }
-
-    fun getArrivalAirportCoordinates(): LatLng {
-        var coordinates = LatLng(0.0, 0.0)
-        val arr = selectedFlightLiveData.value!!.estArrivalAirport
-        airportListLiveData.value!!.forEach {
-            if (it.icao == arr) {
-                coordinates = LatLng(it.lat.toDouble(), it.lon.toDouble())
-                return coordinates
-            }
-        }
-        return coordinates
-    }
-
-    fun search(icao: String, isArrival: Boolean, begin: Long, end: Long) {
-
-        val searchDataModel = SearchDataModel(
-            isArrival,
-            icao,
-            begin,
-            end
-        )
+        val searchDataModel = SearchDataModel(isArrival, icao, begin, end)
         SearchFlightsAsyncTask(this).execute(searchDataModel)
     }
 
@@ -76,7 +50,15 @@ class FlightListViewModel : ViewModel(), RequestsManager.RequestListener {
         Log.e("Request", "problem")
     }
 
-    fun updateSelectedFlight(flight: FlightModel) {
-        selectedFlightLiveData.value = flight
+    fun updateSelectedFlightName(flightName: String) {
+        selectedFlightNameLiveData.value = flightName
+    }
+
+    fun updateSelectedIcao(icao: String){
+        selectedIcaoLiveData.value = icao
+    }
+
+    fun updateSelectedTime(time: Long){
+        selectedTimeLiveData.value = time
     }
 }

@@ -19,7 +19,7 @@ class FlightListActivity : AppCompatActivity() {
         val isMobile = detail_container == null
 
         viewModel = ViewModelProvider(this).get(FlightListViewModel::class.java)
-        viewModel.search(
+        viewModel.searchFlight(
             intent.getStringExtra("icao")!!,
             intent.getBooleanExtra("isArrival", false),
             intent.getLongExtra("begin", 0),
