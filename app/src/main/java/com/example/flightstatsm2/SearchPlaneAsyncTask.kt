@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.maps.model.LatLng
 
+//Classe encore en cours de développement
 class SearchPlaneAsyncTask (requestListener: RequestsManager.RequestListener) :
     AsyncTask<SearchDataModel, Void, String>() {
     var mRequestListener: RequestsManager.RequestListener? = null

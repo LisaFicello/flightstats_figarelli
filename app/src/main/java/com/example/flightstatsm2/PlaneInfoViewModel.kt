@@ -7,6 +7,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.maps.model.LatLng
 
+//Classe encore en cours de développement, donc les variables + fonctions ne sont pas encore totalement
+//codée et testées
 class PlaneInfoViewModel : ViewModel(), RequestsManager.RequestListener {
     private val airportListLiveData : MutableLiveData<List<Airport>> = MutableLiveData()
     val flightListLiveData: MutableLiveData<List<FlightModel>> = MutableLiveData()
@@ -35,12 +37,10 @@ class PlaneInfoViewModel : ViewModel(), RequestsManager.RequestListener {
     override fun onRequestSuccess(result: String?) {
         isLoadingLiveData.value = false
         val flightList = Utils.getFlightListFromString(result!!)
-        Log.d("models list", flightList.toString())
         flightListLiveData.value = flightList
     }
 
     override fun onRequestFailed() {
         isLoadingLiveData.value = false
-        Log.e("Request", "problem")
     }
 }
