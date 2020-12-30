@@ -81,7 +81,7 @@ class FlightDetailFragment : Fragment(), OnMapReadyCallback, RequestsManager.Req
         btnDetails.setOnClickListener {
             val intent = Intent(
                 activity,
-                PlaneInfoViewModel::class.java
+                PlaneInfoActivity::class.java
             )
             startActivity(intent) }
     }

@@ -20,7 +20,9 @@
             android:value="AIzaSyDj5Mic2jLYS9rzvwLp-ga0DrT2Vm3HBjI"/>
 
         <activity android:name=".FlightListActivity"></activity>
+
         <activity android:name=".PlaneInfoActivity"></activity>
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
