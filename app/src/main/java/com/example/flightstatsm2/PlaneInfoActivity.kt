@@ -13,7 +13,7 @@ class PlaneInfoActivity  : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_plane_info)
-        Log.e("Ecran4", "HEY LA QUI VA LÀ ?")
+        Log.e("Ecran4", "Screen 4 is loaded")
 
         val isMobile = detail_container == null
 
@@ -36,7 +36,5 @@ class PlaneInfoActivity  : AppCompatActivity() {
                 transaction.commit()
             }
         })
-
-
     }
 }

@@ -41,7 +41,7 @@ class FlightListViewModel : ViewModel(), RequestsManager.RequestListener {
     override fun onRequestSuccess(result: String?) {
         isLoadingLiveData.value = false
         val flightList = Utils.getFlightListFromString(result!!)
-        Log.d("models list", flightList.toString())
+        Log.d("RequestFlightList", "Result : " + flightList.toString())
         flightListLiveData.value = flightList
     }
 

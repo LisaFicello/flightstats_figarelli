@@ -32,7 +32,7 @@ class PlaneInfoFragment : Fragment(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.e("PlaneInfoFRAGMENT", "Inspecteur Gadget !")
+        Log.e("PlaneInfoFRAGMENT", "Inspecteur Gadget ! euh pardon Plane Info Fragment is loaded")
     }
 
 

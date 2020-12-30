@@ -51,6 +51,7 @@ class FlightDetailFragment : Fragment(), OnMapReadyCallback, RequestsManager.Req
         }
     }
 
+    //On instancie la vue de la map et on récupère l'icao et le temps de départ/d'arrivée
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -76,6 +77,7 @@ class FlightDetailFragment : Fragment(), OnMapReadyCallback, RequestsManager.Req
         return rootView
     }
 
+    //Permet d'accèder à l'activité PlaneInfoActivity pour réaliser l'écran 4 - Toujours non fonctionnel
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         btnDetails.setOnClickListener {
@@ -99,14 +101,14 @@ class FlightDetailFragment : Fragment(), OnMapReadyCallback, RequestsManager.Req
             )
         )
         updateMap(coordinates)
-        Log.i("coordinates", "L'appel API a réussi fréro")
+        Log.i("RequestCoordinates", "Success, result : " + coordinates)
     }
 
     override fun onRequestFailed() {
         Log.e("Request", "problem")
     }
 
-    fun searchTrack(icao: String, time: Long) {
+    fun searchFlightTrack(icao: String, time: Long) {
         val searchFlightTrackDataModel = SearchFlightTrackDataModel(icao, time)
         SearchFlightTrackAsyncTask(this).execute(searchFlightTrackDataModel)
 
@@ -145,12 +147,12 @@ class FlightDetailFragment : Fragment(), OnMapReadyCallback, RequestsManager.Req
     override fun onMapReady(googleMap: GoogleMap) {
         myGoogleMap = googleMap
         myGoogleMap.setOnMapLoadedCallback(this)
-        searchTrack(searchIcao!!, searchTime!!)
-        Log.i("MapIsREADYYYYYYYYY", "La map est prête fréro")
+        searchFlightTrack(searchIcao!!, searchTime!!)
+        Log.i("onMapReady", "The map is ready")
     }
 
     override fun onMapLoaded() {
-        Log.i("MapIsLOADEDDDDDD", "La map a chargé fréro")
+        Log.i("onMapLoaded", "The map is loaded")
     }
     private fun zoomToFit(departure: LatLng, arrival: LatLng) {
         val coordinates = LatLngBounds.Builder()

@@ -21,30 +21,6 @@ class PlaneInfoViewModel : ViewModel(), RequestsManager.RequestListener {
         return selectedFlightLiveData
     }
 
-    fun getDepartureAirportCoordinates(): LatLng {
-        var coordinates = LatLng(0.0, 0.0)
-        val dep = selectedFlightLiveData.value!!.estDepartureAirport
-        airportListLiveData.value!!.forEach {
-            if (it.icao == dep) {
-                coordinates = LatLng(it.lat.toDouble(), it.lon.toDouble())
-                return coordinates
-            }
-        }
-        return coordinates
-    }
-
-    fun getArrivalAirportCoordinates(): LatLng {
-        var coordinates = LatLng(0.0, 0.0)
-        val arr = selectedFlightLiveData.value!!.estArrivalAirport
-        airportListLiveData.value!!.forEach {
-            if (it.icao == arr) {
-                coordinates = LatLng(it.lat.toDouble(), it.lon.toDouble())
-                return coordinates
-            }
-        }
-        return coordinates
-    }
-
     fun search(icao: String, isArrival: Boolean, begin: Long, end: Long) {
 
         val searchDataModel = SearchDataModel(
@@ -66,9 +42,5 @@ class PlaneInfoViewModel : ViewModel(), RequestsManager.RequestListener {
     override fun onRequestFailed() {
         isLoadingLiveData.value = false
         Log.e("Request", "problem")
-    }
-
-    fun updateSelectedFlight(flight: FlightModel) {
-        selectedFlightLiveData.value = flight
     }
 }
